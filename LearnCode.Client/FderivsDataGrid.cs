@@ -1,6 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.CodeDom;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace LearnCode.Client
 {
@@ -12,9 +13,12 @@ namespace LearnCode.Client
                 new FrameworkPropertyMetadata(typeof(FderivsDataGrid)));
         }
 
-        #region Example TextBox
+        public FderivsDataGrid()
+        {
+            this.Loaded += new RoutedEventHandler(FderivsDataGridLoaded);
+        }
 
-        #endregion
+        #region Example TextBox
 
         public static readonly DependencyProperty EnableFullTextSearchProperty =
             DependencyProperty.Register(
@@ -29,20 +33,45 @@ namespace LearnCode.Client
             set { SetValue(EnableFullTextSearchProperty, value); }
         }
 
-        //#region Pagination
+        #endregion
 
-        //public static readonly DependencyProperty CommandProperty =
-        //    DependencyProperty.Register(
-        //        "Command",
-        //        typeof(ICommand),
-        //        typeof(UserControl));
+        #region Teste
 
-        //public ICommand Command
-        //{
-        //    get { return (ICommand)GetValue(CommandProperty); }
-        //    set { SetValue(CommandProperty, value); }
-        //}
+        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register("ItemsPerPage", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
+        public static readonly DependencyProperty PageProperty = DependencyProperty.Register("Page", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
+        public static readonly DependencyProperty PageSizeProperty = DependencyProperty.Register("PageSize", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
+        public static readonly DependencyProperty TotalPagesProperty = DependencyProperty.Register("TotalPages", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
 
-        //#endregion
+        public int ItemsPerPage
+        {
+            get { return (int)GetValue(ItemsPerPageProperty); }
+            set { SetValue(ItemsPerPageProperty, value); }
+        }
+
+        public int Page
+        {
+            get { return (int)GetValue(PageProperty); }
+            set { SetValue(PageProperty, value); }
+        }
+
+        public int PageSize
+        {
+            get { return (int)GetValue(PageSizeProperty); }
+            set { SetValue(PageSizeProperty, value); }
+        }
+
+        public int TotalPages
+        {
+            get { return (int)GetValue(TotalPagesProperty); }
+            set { SetValue(TotalPagesProperty, value); }
+        }
+
+        private void FderivsDataGridLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Template == null)
+                throw new Exception("Control template not assigned");
+        }
+
+        #endregion
     }
 }

@@ -17,22 +17,23 @@
                         <StackPanel Orientation="Vertical" DataContext="{TemplateBinding DataContext}">
 
 
-
                             <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="1*"/>
-                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
                                 <TextBox Width="200" Margin="2" Grid.Row="0" HorizontalAlignment="Left" x:Name="txtFullTextSearch"   
-                                     Visibility="{TemplateBinding EnableFullTextSearch, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        Visibility="{TemplateBinding EnableFullTextSearch, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                                 <DataGrid    
                                       Grid.Row="1"
                                       ItemsSource="{TemplateBinding ItemsSource}" CanUserAddRows="{TemplateBinding CanUserAddRows}"  
                                       CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
-                                      AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}">
+                                      AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
+                                      Height="auto">
                                     <DataGrid.ItemContainerStyle>
                                         <Style TargetType="{x:Type DataGridRow}">
                                             <Setter Property="Visibility">
@@ -47,9 +48,45 @@
                                     </DataGrid.ItemContainerStyle>
                                 </DataGrid>
 
-                                <Button Grid.Row="2" Content="First Page" Command="{Binding Command}" />
-                            </Grid>
 
+                                <!--<Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    --><!--FAZER SOMENTE UM STACKPANEL--><!--
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="TotalItems" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Items found" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Label Content="Ln"/>
+                                        <TextBlock Text="1"/>
+
+                                        <Label Content="Col"/>
+                                        <TextBlock Text="1"/>
+
+                                        <Label Content="Sel"/>
+                                        <TextBlock Text="1"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button Content="First Page"/>
+                                        <Button Content="Navigate Before"/>
+                                        <Button Content="Last Page"/>
+                                        <Button Content="Next Page"/>
+                                        <Button Content="Last Page"/>
+                                    </StackPanel>
+
+                                </Grid>-->
+
+
+                                <!--<Button Grid.Row="2" Content="First Page" Command="{Binding Command}" />-->
+                            </Grid>
 
 
                         </StackPanel>

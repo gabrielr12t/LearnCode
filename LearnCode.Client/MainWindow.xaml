@@ -6,25 +6,32 @@
         xmlns:local="clr-namespace:LearnCode.Client"
         xmlns:viewmodel="clr-namespace:LearnCode.Client.ViewModels"
         xmlns:grid="clr-namespace:LearnCode.Client"
+        xmlns:conv="clr-namespace:LearnCode.Client.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodel:CountryViewModel}"
         Title="MainWindow" Height="450" Width="800">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Visible">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="24"/>
-                <RowDefinition Height="24"/>
-            </Grid.RowDefinitions>
+    <Grid>
 
-            <grid:FderivsDataGrid Grid.Row="0" ItemsSource="{Binding CountriesViewItem}" EnableFullTextSearch="True" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Visible">
+            <grid:FderivsDataGrid Grid.Row="0" ItemsSource="{Binding CountriesViewItem}" ItemsPerPage="{Binding }" EnableFullTextSearch="True" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Code" Binding="{Binding Code}"/>
                 </DataGrid.Columns>
             </grid:FderivsDataGrid>
-        </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
+
+        <Button Grid.Row="1" IsEnabled="{Binding Pagination.HasNextPage}" Content="Next Page" Command="{Binding NextPageCommand}"/>
+        <Button Grid.Row="2" IsEnabled="{Binding Pagination.HasPreviousPage}" Content="Previous Page" Command="{Binding PreviousPageCommand}"/>
+    </Grid>
+
+
 
 </Window>
