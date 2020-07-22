@@ -1,0 +1,30 @@
+﻿<Window x:Class="LearnCode.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearnCode.Client"
+        xmlns:viewmodel="clr-namespace:LearnCode.Client.ViewModels"
+        xmlns:grid="clr-namespace:LearnCode.Client"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewmodel:CountryViewModel}"
+        Title="MainWindow" Height="450" Width="800">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Visible">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="24"/>
+            </Grid.RowDefinitions>
+
+            <grid:FderivsDataGrid Grid.Row="0" ItemsSource="{Binding CountriesViewItem}" EnableFullTextSearch="True" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Code" Binding="{Binding Code}"/>
+                </DataGrid.Columns>
+            </grid:FderivsDataGrid>
+        </Grid>
+    </ScrollViewer>
+
+</Window>
