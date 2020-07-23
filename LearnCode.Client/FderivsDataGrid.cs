@@ -5,7 +5,7 @@ using System.Windows.Input;
 namespace LearnCode.Client
 {
     [TemplatePart(Name = "PART_PageTextBox", Type = typeof(TextBox))]
-    public partial class FderivsDataGrid : DataGrid
+    public class FderivsDataGrid : DataGrid
     {
         protected TextBox textBlockPage;
 
@@ -44,7 +44,8 @@ namespace LearnCode.Client
 
         private void TextBoxPageLostFocus(object sender, RoutedEventArgs e)
         {
-            FirstPageCommand.Execute(sender);
+            TextBox textbox = (TextBox)sender;
+            FirstPageCommand.Execute(textbox.Text);
         }
 
         #endregion

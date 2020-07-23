@@ -61,6 +61,7 @@
     <Compile Include="FderivControl\Util\PageChanges.cs" />
     <Compile Include="FderivControl\Util\PagedList.cs" />
     <Compile Include="FderivsDataGrid.cs" />
+    <Compile Include="Paging\PagingConstants.cs" />
     <Compile Include="Util\Command\CommandBase.cs" />
     <Compile Include="Util\Command\CommandExecuteFactory.cs" />
     <Compile Include="Util\Command\CommandFactory.cs" />
@@ -70,8 +71,6 @@
     <Compile Include="ViewModels\CountryService.cs" />
     <Compile Include="ViewModels\CountryViewItem.cs" />
     <Compile Include="ViewModels\CountryViewModel.cs" />
-    <Compile Include="ViewModels\IHavePagination.cs" />
-    <Compile Include="ViewModels\Pagination.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

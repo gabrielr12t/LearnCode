@@ -1,4 +1,5 @@
-﻿using LearnCode.Client.Util;
+﻿using LearnCode.Client.Paging;
+using LearnCode.Client.Util;
 using LearnCode.Client.Util.Command;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace LearnCode.Client.ViewModels
 {
-    public class CountryViewModel : ViewModelBase, IHavePagination<CountryViewItem>
+    public class CountryViewModel : ViewModelBase
     {
         private readonly CountryService countryService;
 
@@ -15,23 +16,66 @@ namespace LearnCode.Client.ViewModels
         {
             countryService = new CountryService();
             CountriesViewItem = new ObservableCollection<CountryViewItem>();
-            pagination = new Pagination<CountryViewItem>();
         }
 
         #region Property Set
-
-        private Pagination<CountryViewItem> pagination;
-        public Pagination<CountryViewItem> Pagination
-        {
-            get { return pagination; }
-            private set { SetProperty(ref pagination, value, true); }
-        }
 
         private ObservableCollection<CountryViewItem> countriesViewItem;
         public ObservableCollection<CountryViewItem> CountriesViewItem
         {
             get { return countriesViewItem; }
             private set { SetProperty(ref countriesViewItem, value, true); }
+        }
+
+        private int currentPage;
+        public int CurrentPage
+        {
+            get { return currentPage; }
+            private set
+            {
+                if (value <= totalPages)
+                    SetProperty(ref currentPage, value, true);
+            }
+        }
+
+        private int totalPages;
+        public int TotalPages
+        {
+            get { return totalPages; }
+            private set { SetProperty(ref totalPages, value, true); }
+        }
+
+        private int totalItems;
+        public int TotalItems
+        {
+            get { return totalItems; }
+            private set { SetProperty(ref totalItems, value, true); }
+        }
+
+        #endregion
+
+        #region Paging
+
+        public int FirstPage => (PagingConstants.DefaultFirstPage - 1) * PagingConstants.DefaultItemsPerPage;
+        public int LastPage => TotalPages * PagingConstants.DefaultItemsPerPage;
+
+        public int NextPage => (CurrentPage + 1) * PagingConstants.DefaultItemsPerPage;
+        public int PreviousPage => (CurrentPage - 1) * PagingConstants.DefaultItemsPerPage;
+
+        public bool HasNextPage => NextPage <= LastPage;
+        public bool HasPreviousPage => PreviousPage >= FirstPage;
+
+        private void SetTotalPages(int totalItems)
+        {
+            double pagesQuantity = (Convert.ToDouble(totalItems) / Convert.ToDouble(PagingConstants.DefaultItemsPerPage));
+            double pagesQuantityRoundedToUp = Math.Ceiling(pagesQuantity);
+            TotalPages = (pagesQuantityRoundedToUp <= 1) ? 1 : Convert.ToInt32(pagesQuantityRoundedToUp) - 1;
+        }
+
+        private void SetCurrentPage(int skipQuantity)
+        {
+            int page = Convert.ToInt32((skipQuantity / PagingConstants.DefaultItemsPerPage));
+            CurrentPage = page;
         }
 
         #endregion
@@ -44,23 +88,29 @@ namespace LearnCode.Client.ViewModels
         private void LoadCommandImplementation()
         {
             int totalItems = countryService.GetCountries().Count();
-            ConfigurePagination(totalItems, 10, countryService.GetCountries);
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(FirstPage, PagingConstants.DefaultItemsPerPage);
 
-            IEnumerable<CountryViewItem> response = pagination.FirstPageItems();
-            Refresh(response, pagination.FirstPage);
+            if (response != null)
+            {
+                TotalItems = totalItems;
+                Refresh(response, FirstPage);
+            }
         }
 
         #endregion
 
-        #region Pagination
+        #region Navigate Command
 
         private RelayCommand nextPageCommand;
         public RelayCommand NextPageCommand { get { return GetOrSetProperty(ref nextPageCommand, () => this.CreateCommand(NextPageCommandImplementation)); } }
 
         private void NextPageCommandImplementation()
         {
-            IEnumerable<CountryViewItem> response = pagination.NextPageItems();
-            Refresh(response, pagination.NextPage);
+            if (!HasNextPage)
+                return;
+
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(NextPage, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, NextPage);
         }
 
         private RelayCommand previousPageCommand;
@@ -68,8 +118,11 @@ namespace LearnCode.Client.ViewModels
 
         private void PreviousPageCommandImplementation()
         {
-            IEnumerable<CountryViewItem> response = pagination.PreviousPageItems();
-            Refresh(response, pagination.PreviousPage);
+            if (!HasPreviousPage)
+                return;
+
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(PreviousPage, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, PreviousPage);
         }
 
         private RelayCommand firstPageCommand;
@@ -77,8 +130,8 @@ namespace LearnCode.Client.ViewModels
 
         private void FirstPageCommandImplementation()
         {
-            IEnumerable<CountryViewItem> response = pagination.FirstPageItems();
-            Refresh(response, pagination.FirstPage);
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(FirstPage, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, FirstPage);
         }
 
         private RelayCommand lastPageCommand;
@@ -86,30 +139,37 @@ namespace LearnCode.Client.ViewModels
 
         private void LastPageCommandImplementation()
         {
-            IEnumerable<CountryViewItem> response = pagination.LastPageItems();
-            Refresh(response, pagination.LastPage);
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(LastPage, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, LastPage);
+        }
+
+        private RelayCommand pageIndexCommand;
+        public RelayCommand PageIndexCommand { get { return GetOrSetProperty(ref pageIndexCommand, () => this.CreateCommand(PageIndexCommandImplementation)); } }
+
+        private void PageIndexCommandImplementation()
+        {
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(LastPage, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, LastPage);
         }
 
         #endregion
 
         #region Private Methods
 
-        private void Refresh(IEnumerable<CountryViewItem> response, int page)
+        private void Refresh(IEnumerable<CountryViewItem> response, int currentSkipItem)
         {
             if (response == null)
-                return;         
-                                                                     
+                return;
+
+            SetTotalPages(TotalItems);
+            SetCurrentPage(currentSkipItem);
+
             CountriesViewItem.Clear();
 
             foreach (CountryViewItem country in response)
             {
                 CountriesViewItem.Add(country);
             }
-        }
-
-        private void ConfigurePagination(int totalItems, int pageSize, Func<int, int, IEnumerable<CountryViewItem>> searchCommand)
-        {
-            pagination.ConfigurePaginationSettings(totalItems, pageSize, searchCommand);
         }
 
         #endregion

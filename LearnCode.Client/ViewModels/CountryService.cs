@@ -17,7 +17,7 @@ namespace LearnCode.Client.ViewModels
             {
                 string json = r.ReadToEnd();
                 var data = JsonConvert.DeserializeObject<IEnumerable<CountryViewItem>>(json);             
-                return data.Skip(pageIndex * pageSize).Take(pageSize);
+                return data.Skip(pageIndex).Take(pageSize);
             }
         }
     }
