@@ -70,7 +70,7 @@
     <Compile Include="ViewModels\CountryService.cs" />
     <Compile Include="ViewModels\CountryViewItem.cs" />
     <Compile Include="ViewModels\CountryViewModel.cs" />
-    <Compile Include="ViewModels\IHasPagination.cs" />
+    <Compile Include="ViewModels\IHavePagination.cs" />
     <Compile Include="ViewModels\Pagination.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -81,7 +81,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Converters\SearchTextToVisibilityConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

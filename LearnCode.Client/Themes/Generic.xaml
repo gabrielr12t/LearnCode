@@ -3,7 +3,6 @@
                     xmlns:conv="clr-namespace:LearnCode.Client.Converters"
                     xmlns:local="clr-namespace:LearnCode.Client">
 
-    <conv:SearchTextToVisibilityConverter x:Key="SearchTextToVisibilityConverter"/>
     <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
     <Style TargetType="{x:Type local:FderivsDataGrid}">
@@ -16,17 +15,13 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel Orientation="Vertical" DataContext="{TemplateBinding DataContext}">
 
+                            <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FderivsDataGrid}}}">
 
-                            <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="24"/>
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-
-                                <TextBox Width="200" Margin="2" Grid.Row="0" HorizontalAlignment="Left" x:Name="txtFullTextSearch"   
-                                        Visibility="{TemplateBinding EnableFullTextSearch, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                                 <DataGrid    
                                       Grid.Row="1"
@@ -34,60 +29,31 @@
                                       CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
                                       AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
                                       Height="auto">
-                                    <DataGrid.ItemContainerStyle>
-                                        <Style TargetType="{x:Type DataGridRow}">
-                                            <Setter Property="Visibility">
-                                                <Setter.Value>
-                                                    <MultiBinding Converter="{StaticResource SearchTextToVisibilityConverter}">
-                                                        <Binding ElementName="txtFullTextSearch" Path="Text"/>
-                                                        <Binding BindsDirectlyToSource="True"/>
-                                                    </MultiBinding>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </DataGrid.ItemContainerStyle>
                                 </DataGrid>
 
+                                <Grid Grid.Row="2" Visibility="{TemplateBinding EnablePagination, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-                                <!--<Grid Grid.Row="2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    --><!--FAZER SOMENTE UM STACKPANEL--><!--
-
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <TextBlock Text="TotalItems" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="Items found" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="&lt;&lt;" Grid.Column="0" Command="{Binding FirstPageCommand}" />
+                                        <Button Content="&lt;" Grid.Column="1"     Command="{Binding PreviousPageCommand}" />
+                                        <TextBox Name="PART_PageTextBox" Grid.Column="2"/>
+                                        <Button Content="&gt;" Grid.Column="3"     Command="{Binding NextPageCommand}"/>
+                                        <Button Content="&gt;&gt;" Grid.Column="4" Command="{Binding LastPageCommand}"/>
+                                        <TextBlock Text="{Binding TotalItems}" />
                                     </StackPanel>
 
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <Label Content="Ln"/>
-                                        <TextBlock Text="1"/>
-
-                                        <Label Content="Col"/>
-                                        <TextBlock Text="1"/>
-
-                                        <Label Content="Sel"/>
-                                        <TextBlock Text="1"/>
-                                    </StackPanel>
-
-                                    <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <Button Content="First Page"/>
-                                        <Button Content="Navigate Before"/>
-                                        <Button Content="Last Page"/>
-                                        <Button Content="Next Page"/>
-                                        <Button Content="Last Page"/>
-                                    </StackPanel>
-
-                                </Grid>-->
-
-
-                                <!--<Button Grid.Row="2" Content="First Page" Command="{Binding Command}" />-->
+                                </Grid>
                             </Grid>
-
 
                         </StackPanel>
                     </Border>

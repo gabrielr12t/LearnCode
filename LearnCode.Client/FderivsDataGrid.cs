@@ -1,46 +1,117 @@
-﻿using System;
-using System.CodeDom;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace LearnCode.Client
 {
-    public class FderivsDataGrid : DataGrid
+    [TemplatePart(Name = "PART_PageTextBox", Type = typeof(TextBox))]
+    public partial class FderivsDataGrid : DataGrid
     {
+        protected TextBox textBlockPage;
+
+        public FderivsDataGrid()
+        {
+            this.Loaded += FderivsDataGridLoaded;
+        }
+
+        ~FderivsDataGrid()
+        {
+            UnregisterEvents();
+        }
+
+        private void FderivsDataGridLoaded(object sender, RoutedEventArgs e)
+        {
+            RegisterEvents();
+        }
+
+        #region Internal Methods
+
+        public override void OnApplyTemplate()
+        {
+            textBlockPage = this.Template.FindName("PART_PageTextBox", this) as TextBox;
+            base.OnApplyTemplate();
+        }
+
+        private void RegisterEvents()
+        {
+            textBlockPage.LostFocus += TextBoxPageLostFocus;
+        }
+
+        private void UnregisterEvents()
+        {
+            textBlockPage.LostFocus -= TextBoxPageLostFocus;
+        }
+
+        private void TextBoxPageLostFocus(object sender, RoutedEventArgs e)
+        {
+            FirstPageCommand.Execute(sender);
+        }
+
+        #endregion
+
         static FderivsDataGrid()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FderivsDataGrid),
                 new FrameworkPropertyMetadata(typeof(FderivsDataGrid)));
         }
 
-        public FderivsDataGrid()
+        #region Pagination
+
+        public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FderivsDataGrid), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
+
+        public bool EnablePagination
         {
-            this.Loaded += new RoutedEventHandler(FderivsDataGridLoaded);
+            get { return (bool)GetValue(EnablePaginationProperty); }
+            set { SetValue(EnablePaginationProperty, value); }
         }
 
-        #region Example TextBox
-
-        public static readonly DependencyProperty EnableFullTextSearchProperty =
-            DependencyProperty.Register(
-                "EnableFullTextSearch",
-                typeof(bool),
-                typeof(FderivsDataGrid),
-                new UIPropertyMetadata(false));
-
-        public bool EnableFullTextSearch
+        public ICommand NextPageCommand
         {
-            get { return (bool)GetValue(EnableFullTextSearchProperty); }
-            set { SetValue(EnableFullTextSearchProperty, value); }
+            get { return (ICommand)GetValue(NextPageCommandProperty); }
+            set { SetValue(NextPageCommandProperty, value); }
+        }
+
+        public ICommand PreviousPageCommand
+        {
+            get { return (ICommand)GetValue(PreviousPageCommandProperty); }
+            set { SetValue(PreviousPageCommandProperty, value); }
+        }
+
+        public ICommand FirstPageCommand
+        {
+            get { return (ICommand)GetValue(FirstPageCommandProperty); }
+            set { SetValue(FirstPageCommandProperty, value); }
+        }
+
+        public ICommand LastPageCommand
+        {
+            get { return (ICommand)GetValue(LastPageCommandProperty); }
+            set { SetValue(LastPageCommandProperty, value); }
         }
 
         #endregion
 
-        #region Teste
+        #region Pagination Information
 
-        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register("ItemsPerPage", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
-        public static readonly DependencyProperty PageProperty = DependencyProperty.Register("Page", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
-        public static readonly DependencyProperty PageSizeProperty = DependencyProperty.Register("PageSize", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
-        public static readonly DependencyProperty TotalPagesProperty = DependencyProperty.Register("TotalPages", typeof(int), typeof(FderivsDataGrid), new UIPropertyMetadata(int.MaxValue));
+        public static readonly DependencyProperty TotalItemsProperty = DependencyProperty.Register(nameof(TotalItems), typeof(int), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty TotalPageProperty = DependencyProperty.Register(nameof(TotalPage), typeof(int), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register(nameof(ItemsPerPage), typeof(int), typeof(FderivsDataGrid));
+
+        public int TotalItems
+        {
+            get { return (int)GetValue(TotalItemsProperty); }
+            set { SetValue(TotalItemsProperty, value); }
+        }
+
+        public int TotalPage
+        {
+            get { return (int)GetValue(TotalPageProperty); }
+            set { SetValue(TotalPageProperty, value); }
+        }
 
         public int ItemsPerPage
         {
@@ -48,28 +119,23 @@ namespace LearnCode.Client
             set { SetValue(ItemsPerPageProperty, value); }
         }
 
-        public int Page
+        #endregion
+
+        #region DataGrid Information
+
+        public static readonly DependencyProperty SelectedLineProperty = DependencyProperty.Register(nameof(SelectedLine), typeof(int), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty SelectedColumnProperty = DependencyProperty.Register(nameof(SelectedColumn), typeof(int), typeof(FderivsDataGrid));
+
+        public int SelectedLine
         {
-            get { return (int)GetValue(PageProperty); }
-            set { SetValue(PageProperty, value); }
+            get { return (int)GetValue(SelectedLineProperty); }
+            set { SetValue(SelectedLineProperty, value); }
         }
 
-        public int PageSize
+        public int SelectedColumn
         {
-            get { return (int)GetValue(PageSizeProperty); }
-            set { SetValue(PageSizeProperty, value); }
-        }
-
-        public int TotalPages
-        {
-            get { return (int)GetValue(TotalPagesProperty); }
-            set { SetValue(TotalPagesProperty, value); }
-        }
-
-        private void FderivsDataGridLoaded(object sender, RoutedEventArgs e)
-        {
-            if (Template == null)
-                throw new Exception("Control template not assigned");
+            get { return (int)GetValue(SelectedColumnProperty); }
+            set { SetValue(SelectedColumnProperty, value); }
         }
 
         #endregion

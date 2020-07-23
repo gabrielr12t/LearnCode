@@ -10,14 +10,13 @@ namespace LearnCode.Client.ViewModels
         private Func<int, int, IEnumerable<T>> _searchCommand;
 
         #region Paging
-        public bool Teste => true;
 
         public int FirstPage => 0;
-        public int LatestPage => totalPages * ItemsPerPage;
+        public int LastPage => totalPages * ItemsPerPage;
         public int NextPage => CurrentPage + 1;
         public int PreviousPage => CurrentPage - 1;
         public bool HasPreviousPage => CurrentPage > 0;
-        public bool HasNextPage => NextPage < LatestPage;
+        public bool HasNextPage => NextPage < LastPage;
 
         #endregion
 
@@ -55,7 +54,12 @@ namespace LearnCode.Client.ViewModels
             private set { SetProperty(ref itemsPerPage, value, true); }
         }
 
-        public void SetTotalPages(int totalItems)
+        private void SetItemsPerPage(int itemsPerPage = int.MaxValue)
+        {
+            ItemsPerPage = itemsPerPage;
+        }
+
+        private void SetTotalPages(int totalItems)
         {
             double pagesQuantity = totalItems / ItemsPerPage;
             double pagesQuantityRoundedToUp = Math.Ceiling(pagesQuantity);
@@ -63,24 +67,26 @@ namespace LearnCode.Client.ViewModels
             this.TotalItems = totalItems;
         }
 
+        private void SetSearchCommand(Func<int, int, IEnumerable<T>> searchCommand)
+        {
+            _searchCommand = searchCommand;
+        }
+
         public void SetCurrentPage(int skipQuantity)
         {
             CurrentPage = skipQuantity;
         }
 
-        public void SetItemsPerPage(int itemsPerPage = int.MaxValue)
+        public void ConfigurePaginationSettings(int totalItems, int itemsPerPage, Func<int, int, IEnumerable<T>> searchCommand)
         {
-            ItemsPerPage = itemsPerPage;
-        }
-
-        public void SetSearchCommand(Func<int, int, IEnumerable<T>> searchCommand)
-        {
-            _searchCommand = searchCommand;
+            SetItemsPerPage(itemsPerPage);
+            SetTotalPages(totalItems);
+            SetSearchCommand(searchCommand);
         }
 
         #endregion
 
-        #region Navigate Commands
+        #region Navigate Methods
 
         public IEnumerable<T> FirstPageItems()
         {
@@ -107,24 +113,28 @@ namespace LearnCode.Client.ViewModels
             switch (change)
             {
                 case PageChanges.First:
+                    SetCurrentPage(FirstPage);
                     return _searchCommand?.Invoke(FirstPage, ItemsPerPage);
 
                 case PageChanges.Previous:
                     if (!HasPreviousPage)
                         return null;
+                    SetCurrentPage(PreviousPage);
                     return _searchCommand?.Invoke(PreviousPage, ItemsPerPage);
 
                 case PageChanges.Current:
+                    SetCurrentPage(CurrentPage);
                     return _searchCommand?.Invoke(CurrentPage, ItemsPerPage);
 
                 case PageChanges.Next:
                     if (!HasNextPage)
                         return null;
-
+                    SetCurrentPage(NextPage);
                     return _searchCommand?.Invoke(NextPage, ItemsPerPage);
 
                 case PageChanges.Last:
-                    return _searchCommand?.Invoke(LatestPage, ItemsPerPage);
+                    SetCurrentPage(LastPage);
+                    return _searchCommand?.Invoke(LastPage, ItemsPerPage);
 
                 default:
                     return null;
