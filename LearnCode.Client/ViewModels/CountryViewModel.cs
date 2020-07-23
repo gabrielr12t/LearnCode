@@ -64,20 +64,7 @@ namespace LearnCode.Client.ViewModels
 
         public bool HasNextPage => NextPage <= LastPage;
         public bool HasPreviousPage => PreviousPage >= FirstPage;
-
-        private void SetTotalPages(int totalItems)
-        {
-            double pagesQuantity = (Convert.ToDouble(totalItems) / Convert.ToDouble(PagingConstants.DefaultItemsPerPage));
-            double pagesQuantityRoundedToUp = Math.Ceiling(pagesQuantity);
-            TotalPages = (pagesQuantityRoundedToUp <= 1) ? 1 : Convert.ToInt32(pagesQuantityRoundedToUp) - 1;
-        }
-
-        private void SetCurrentPage(int skipQuantity)
-        {
-            int page = Convert.ToInt32((skipQuantity / PagingConstants.DefaultItemsPerPage));
-            CurrentPage = page;
-        }
-
+       
         #endregion
 
         #region Load Command
@@ -151,7 +138,7 @@ namespace LearnCode.Client.ViewModels
             int page;
             int.TryParse(input as string, out page);
 
-            if (page <= 0 || page > TotalPages)
+            if (page < 0 || page > TotalPages)
                 return;
 
             int nextItems = page * PagingConstants.DefaultItemsPerPage;
@@ -177,6 +164,19 @@ namespace LearnCode.Client.ViewModels
             {
                 CountriesViewItem.Add(country);
             }
+        }
+
+        private void SetTotalPages(int totalItems)
+        {
+            double pagesQuantity = (Convert.ToDouble(totalItems) / Convert.ToDouble(PagingConstants.DefaultItemsPerPage));
+            double pagesQuantityRoundedToUp = Math.Ceiling(pagesQuantity);
+            TotalPages = (pagesQuantityRoundedToUp <= 1) ? 1 : Convert.ToInt32(pagesQuantityRoundedToUp) - 1;
+        }
+
+        private void SetCurrentPage(int skipQuantity)
+        {
+            int page = Convert.ToInt32((skipQuantity / PagingConstants.DefaultItemsPerPage));
+            CurrentPage = page;
         }
 
         #endregion

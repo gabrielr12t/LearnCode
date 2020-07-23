@@ -33,6 +33,11 @@
 
                                 <Grid Grid.Row="2" Visibility="{TemplateBinding EnablePagination, Converter={StaticResource BooleanToVisibilityConverter}}">
 
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="24"/>
+                                        <RowDefinition Height="24"/>
+                                    </Grid.RowDefinitions>
+                                    
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -43,12 +48,19 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Content="&lt;&lt;" Grid.Column="0" Command="{Binding FirstPageCommand}" />
-                                        <Button Content="&lt;" Grid.Column="1"     Command="{Binding PreviousPageCommand}" />
-                                        <TextBox Name="PART_PageTextBox" Grid.Column="2"/>
-                                        <Button Content="&gt;" Grid.Column="3"     Command="{Binding NextPageCommand}"/>
-                                        <Button Content="&gt;&gt;" Grid.Column="4" Command="{Binding LastPageCommand}"/>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <Button Content="&lt;&lt;" Grid.Column="0" Command="{TemplateBinding FirstPageCommand}" />
+                                        <Button Content="&lt;" Grid.Column="1"     Command="{TemplateBinding PreviousPageCommand}" />
+                                        <TextBox Name="PART_PageTextBox" Text="{Binding CurrentPage}" Grid.Column="2"/>
+                                        <Button Content="&gt;" Grid.Column="3"     Command="{TemplateBinding NextPageCommand}"/>
+                                        <Button Content="&gt;&gt;" Grid.Column="4" Command="{TemplateBinding LastPageCommand}"/>
+                                        <Button Content="&gt;&gt;" Grid.Column="4" Command="{TemplateBinding EnablePagination}"/>
+
+                                        <TextBlock Text="Total Items found:"/>
+                                        <TextBlock Text="{Binding TotalItems}"/>
+
+                                        <TextBlock Text="Total Pages:"/>
+                                        <TextBlock Text="{Binding TotalPages}"/>
                                     </StackPanel>
 
                                 </Grid>

@@ -28,7 +28,9 @@
                                   FirstPageCommand="{Binding FirstPageCommand}"
                                   LastPageCommand="{Binding LastPageCommand}"
                                   PageIndexCommand="{Binding PageIndexCommand}"
-                                  TotalItems="{Binding TotalItems}">
+                                  TotalItems="{Binding TotalItems}"
+                                  TotalPages="{Binding TotalPages}"
+                                  CurrentPage="{Binding CurrentPage, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Code" Binding="{Binding Code}"/>

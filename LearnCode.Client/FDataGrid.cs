@@ -7,7 +7,15 @@ namespace LearnCode.Client
     [TemplatePart(Name = "PART_PageTextBox", Type = typeof(TextBox))]
     public class FDataGrid : DataGrid
     {
-        protected TextBox textBlockPage;
+        protected TextBox PageIndexTextBox { get; set; }
+
+        #region Ctor
+
+        static FDataGrid()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FDataGrid),
+                new FrameworkPropertyMetadata(typeof(FDataGrid)));
+        }
 
         public FDataGrid()
         {
@@ -19,44 +27,42 @@ namespace LearnCode.Client
             UnregisterEvents();
         }
 
+        #endregion
+
+        #region Internal Methods
+
         private void FderivsDataGridLoaded(object sender, RoutedEventArgs e)
         {
             RegisterEvents();
         }
 
-        #region Internal Methods
-
         public override void OnApplyTemplate()
         {
-            textBlockPage = this.Template.FindName("PART_PageTextBox", this) as TextBox;
+            PageIndexTextBox = this.Template.FindName("PART_PageTextBox", this) as TextBox;
             base.OnApplyTemplate();
         }
 
         private void RegisterEvents()
         {
-            textBlockPage.LostFocus += TextBoxPageLostFocus;
+            PageIndexTextBox.LostFocus += PageIndexNotify;
+            PageIndexTextBox.KeyDown += PageIndexNotify;
         }
 
         private void UnregisterEvents()
         {
-            textBlockPage.LostFocus -= TextBoxPageLostFocus;
+            PageIndexTextBox.LostFocus -= PageIndexNotify;
+            PageIndexTextBox.KeyDown -= PageIndexNotify;
         }
 
-        private void TextBoxPageLostFocus(object sender, RoutedEventArgs e)
+        private void PageIndexNotify(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            PageIndexCommand.Execute(textbox.Text);
+            PageIndexCommand?.Execute(textbox.Text);
         }
 
         #endregion
 
-        static FDataGrid()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(FDataGrid),
-                new FrameworkPropertyMetadata(typeof(FDataGrid)));
-        }
-
-        #region Pagination
+        #region Pagination Command
 
         public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
         public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FDataGrid));
@@ -106,8 +112,8 @@ namespace LearnCode.Client
         #region Pagination Information
 
         public static readonly DependencyProperty TotalItemsProperty = DependencyProperty.Register(nameof(TotalItems), typeof(int), typeof(FDataGrid));
-        public static readonly DependencyProperty TotalPageProperty = DependencyProperty.Register(nameof(TotalPage), typeof(int), typeof(FDataGrid));
-        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register(nameof(ItemsPerPage), typeof(int), typeof(FDataGrid));
+        public static readonly DependencyProperty TotalPagesProperty = DependencyProperty.Register(nameof(TotalPages), typeof(int), typeof(FDataGrid));
+        public static readonly DependencyProperty CurrentPageProperty = DependencyProperty.Register(nameof(CurrentPage), typeof(int), typeof(FDataGrid));
 
         public int TotalItems
         {
@@ -115,35 +121,16 @@ namespace LearnCode.Client
             set { SetValue(TotalItemsProperty, value); }
         }
 
-        public int TotalPage
+        public int TotalPages
         {
-            get { return (int)GetValue(TotalPageProperty); }
-            set { SetValue(TotalPageProperty, value); }
+            get { return (int)GetValue(TotalPagesProperty); }
+            set { SetValue(TotalPagesProperty, value); }
         }
 
-        public int ItemsPerPage
+        public int CurrentPage
         {
-            get { return (int)GetValue(ItemsPerPageProperty); }
-            set { SetValue(ItemsPerPageProperty, value); }
-        }
-
-        #endregion
-
-        #region DataGrid Information
-
-        public static readonly DependencyProperty SelectedLineProperty = DependencyProperty.Register(nameof(SelectedLine), typeof(int), typeof(FDataGrid));
-        public static readonly DependencyProperty SelectedColumnProperty = DependencyProperty.Register(nameof(SelectedColumn), typeof(int), typeof(FDataGrid));
-
-        public int SelectedLine
-        {
-            get { return (int)GetValue(SelectedLineProperty); }
-            set { SetValue(SelectedLineProperty, value); }
-        }
-
-        public int SelectedColumn
-        {
-            get { return (int)GetValue(SelectedColumnProperty); }
-            set { SetValue(SelectedColumnProperty, value); }
+            get { return (int)GetValue(CurrentPageProperty); }
+            set { SetValue(CurrentPageProperty, value); }
         }
 
         #endregion
