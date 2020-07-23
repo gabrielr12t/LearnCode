@@ -57,7 +57,7 @@ namespace LearnCode.Client
         private void PageIndexNotify(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            PageIndexCommand?.Execute(textbox.Text);
+            ToPageCommand?.Execute(textbox.Text);
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace LearnCode.Client
         public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FDataGrid));
-        public static readonly DependencyProperty PageIndexCommandProperty = DependencyProperty.Register(nameof(PageIndexCommand), typeof(ICommand), typeof(FDataGrid));
+        public static readonly DependencyProperty ToPageCommandProperty = DependencyProperty.Register(nameof(ToPageCommand), typeof(ICommand), typeof(FDataGrid));
 
         public bool EnablePagination
         {
@@ -101,10 +101,10 @@ namespace LearnCode.Client
             set { SetValue(LastPageCommandProperty, value); }
         }
 
-        public ICommand PageIndexCommand
+        public ICommand ToPageCommand
         {
-            get { return (ICommand)GetValue(PageIndexCommandProperty); }
-            set { SetValue(PageIndexCommandProperty, value); }
+            get { return (ICommand)GetValue(ToPageCommandProperty); }
+            set { SetValue(ToPageCommandProperty, value); }
         }
 
         #endregion

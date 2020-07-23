@@ -54,7 +54,6 @@
                                         <TextBox Name="PART_PageTextBox" Text="{Binding CurrentPage}" Grid.Column="2"/>
                                         <Button Content="&gt;" Grid.Column="3"     Command="{TemplateBinding NextPageCommand}"/>
                                         <Button Content="&gt;&gt;" Grid.Column="4" Command="{TemplateBinding LastPageCommand}"/>
-                                        <Button Content="&gt;&gt;" Grid.Column="4" Command="{TemplateBinding EnablePagination}"/>
 
                                         <TextBlock Text="Total Items found:"/>
                                         <TextBlock Text="{Binding TotalItems}"/>

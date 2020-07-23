@@ -130,8 +130,8 @@ namespace LearnCode.Client.ViewModels
             Refresh(response, LastPage);
         }
 
-        private RelayCommand pageIndexCommand;
-        public RelayCommand PageIndexCommand { get { return GetOrSetProperty(ref pageIndexCommand, () => this.CreateCommand(PageIndexCommandImplementation)); } }
+        private RelayCommand toPageCommand;
+        public RelayCommand ToPageCommand { get { return GetOrSetProperty(ref toPageCommand, () => this.CreateCommand(PageIndexCommandImplementation)); } }
 
         private void PageIndexCommandImplementation(object input)
         {
