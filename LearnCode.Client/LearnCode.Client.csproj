@@ -57,9 +57,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FderivControl\Util\IPagedList.cs" />
-    <Compile Include="FderivControl\Util\PageChanges.cs" />
-    <Compile Include="FderivControl\Util\PagedList.cs" />
     <Compile Include="FderivsDataGrid.cs" />
     <Compile Include="Paging\PagingConstants.cs" />
     <Compile Include="Util\Command\CommandBase.cs" />

@@ -7,7 +7,6 @@ namespace LearnCode.Client.Converters
 {
     public class BooleanToVisibilityConverter : IValueConverter
     {
-        // If the value is 'true' it will be interpreated as 'Visible' else 'Collapsed'  
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((bool)value)
