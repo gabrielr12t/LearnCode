@@ -5,16 +5,16 @@ using System.Windows.Input;
 namespace LearnCode.Client
 {
     [TemplatePart(Name = "PART_PageTextBox", Type = typeof(TextBox))]
-    public class FderivsDataGrid : DataGrid
+    public class FDataGrid : DataGrid
     {
         protected TextBox textBlockPage;
 
-        public FderivsDataGrid()
+        public FDataGrid()
         {
             this.Loaded += FderivsDataGridLoaded;
         }
 
-        ~FderivsDataGrid()
+        ~FDataGrid()
         {
             UnregisterEvents();
         }
@@ -45,24 +45,25 @@ namespace LearnCode.Client
         private void TextBoxPageLostFocus(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
-            FirstPageCommand.Execute(textbox.Text);
+            PageIndexCommand.Execute(textbox.Text);
         }
 
         #endregion
 
-        static FderivsDataGrid()
+        static FDataGrid()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(FderivsDataGrid),
-                new FrameworkPropertyMetadata(typeof(FderivsDataGrid)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FDataGrid),
+                new FrameworkPropertyMetadata(typeof(FDataGrid)));
         }
 
         #region Pagination
 
-        public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FderivsDataGrid), new UIPropertyMetadata(true));
-        public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FDataGrid));
+        public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FDataGrid));
+        public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FDataGrid));
+        public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FDataGrid));
+        public static readonly DependencyProperty PageIndexCommandProperty = DependencyProperty.Register(nameof(PageIndexCommand), typeof(ICommand), typeof(FDataGrid));
 
         public bool EnablePagination
         {
@@ -94,13 +95,19 @@ namespace LearnCode.Client
             set { SetValue(LastPageCommandProperty, value); }
         }
 
+        public ICommand PageIndexCommand
+        {
+            get { return (ICommand)GetValue(PageIndexCommandProperty); }
+            set { SetValue(PageIndexCommandProperty, value); }
+        }
+
         #endregion
 
         #region Pagination Information
 
-        public static readonly DependencyProperty TotalItemsProperty = DependencyProperty.Register(nameof(TotalItems), typeof(int), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty TotalPageProperty = DependencyProperty.Register(nameof(TotalPage), typeof(int), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register(nameof(ItemsPerPage), typeof(int), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty TotalItemsProperty = DependencyProperty.Register(nameof(TotalItems), typeof(int), typeof(FDataGrid));
+        public static readonly DependencyProperty TotalPageProperty = DependencyProperty.Register(nameof(TotalPage), typeof(int), typeof(FDataGrid));
+        public static readonly DependencyProperty ItemsPerPageProperty = DependencyProperty.Register(nameof(ItemsPerPage), typeof(int), typeof(FDataGrid));
 
         public int TotalItems
         {
@@ -124,8 +131,8 @@ namespace LearnCode.Client
 
         #region DataGrid Information
 
-        public static readonly DependencyProperty SelectedLineProperty = DependencyProperty.Register(nameof(SelectedLine), typeof(int), typeof(FderivsDataGrid));
-        public static readonly DependencyProperty SelectedColumnProperty = DependencyProperty.Register(nameof(SelectedColumn), typeof(int), typeof(FderivsDataGrid));
+        public static readonly DependencyProperty SelectedLineProperty = DependencyProperty.Register(nameof(SelectedLine), typeof(int), typeof(FDataGrid));
+        public static readonly DependencyProperty SelectedColumnProperty = DependencyProperty.Register(nameof(SelectedColumn), typeof(int), typeof(FDataGrid));
 
         public int SelectedLine
         {

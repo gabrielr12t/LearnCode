@@ -57,7 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FderivsDataGrid.cs" />
+    <Compile Include="FDataGrid.cs" />
     <Compile Include="Paging\PagingConstants.cs" />
     <Compile Include="Util\Command\CommandBase.cs" />
     <Compile Include="Util\Command\CommandExecuteFactory.cs" />

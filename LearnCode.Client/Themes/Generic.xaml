@@ -5,17 +5,17 @@
 
     <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-    <Style TargetType="{x:Type local:FderivsDataGrid}">
+    <Style TargetType="{x:Type local:FDataGrid}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:FderivsDataGrid}">
+                <ControlTemplate TargetType="{x:Type local:FDataGrid}">
 
                     <Border Background="{TemplateBinding Background}"  
                             BorderBrush="{TemplateBinding BorderBrush}"  
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel Orientation="Vertical" DataContext="{TemplateBinding DataContext}">
 
-                            <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FderivsDataGrid}}}">
+                            <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FDataGrid}}}">
 
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="24"/>

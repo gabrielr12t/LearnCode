@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearnCode.Client"
         xmlns:viewmodel="clr-namespace:LearnCode.Client.ViewModels"
-        xmlns:grid="clr-namespace:LearnCode.Client"
+        xmlns:fdrv="clr-namespace:LearnCode.Client"
         xmlns:conv="clr-namespace:LearnCode.Client.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodel:CountryViewModel}"
@@ -19,18 +19,24 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Visible">
-            <grid:FderivsDataGrid Grid.Row="0"
+
+
+            <fdrv:FDataGrid Grid.Row="0"
                                   ItemsSource="{Binding CountriesViewItem}"
                                   NextPageCommand="{Binding NextPageCommand}" 
                                   PreviousPageCommand="{Binding PreviousPageCommand}"
                                   FirstPageCommand="{Binding FirstPageCommand}"
                                   LastPageCommand="{Binding LastPageCommand}"
-                                  TotalItems="{Binding Pagination.TotalItems}">
+                                  PageIndexCommand="{Binding PageIndexCommand}"
+                                  TotalItems="{Binding TotalItems}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="Code" Binding="{Binding Code}"/>
                 </DataGrid.Columns>
-            </grid:FderivsDataGrid>
+            </fdrv:FDataGrid>
+
+
+
         </ScrollViewer>
     </Grid>
 </Window>

@@ -85,7 +85,7 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand loadCommand;
         public RelayCommand LoadCommand { get { return GetOrSetProperty(ref loadCommand, () => this.CreateCommand(LoadCommandImplementation)); } }
 
-        private void LoadCommandImplementation()
+        private void LoadCommandImplementation(object input)
         {
             int totalItems = countryService.GetCountries().Count();
             IEnumerable<CountryViewItem> response = countryService.GetCountries(FirstPage, PagingConstants.DefaultItemsPerPage);
@@ -104,7 +104,7 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand nextPageCommand;
         public RelayCommand NextPageCommand { get { return GetOrSetProperty(ref nextPageCommand, () => this.CreateCommand(NextPageCommandImplementation)); } }
 
-        private void NextPageCommandImplementation()
+        private void NextPageCommandImplementation(object input)
         {
             if (!HasNextPage)
                 return;
@@ -116,7 +116,7 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand previousPageCommand;
         public RelayCommand PreviousPageCommand { get { return GetOrSetProperty(ref previousPageCommand, () => this.CreateCommand(PreviousPageCommandImplementation)); } }
 
-        private void PreviousPageCommandImplementation()
+        private void PreviousPageCommandImplementation(object input)
         {
             if (!HasPreviousPage)
                 return;
@@ -128,7 +128,7 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand firstPageCommand;
         public RelayCommand FirstPageCommand { get { return GetOrSetProperty(ref firstPageCommand, () => this.CreateCommand(FirstPageCommandImplementation)); } }
 
-        private void FirstPageCommandImplementation()
+        private void FirstPageCommandImplementation(object input)
         {
             IEnumerable<CountryViewItem> response = countryService.GetCountries(FirstPage, PagingConstants.DefaultItemsPerPage);
             Refresh(response, FirstPage);
@@ -137,7 +137,7 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand lastPageCommand;
         public RelayCommand LastPageCommand { get { return GetOrSetProperty(ref lastPageCommand, () => this.CreateCommand(LastPageCommandImplementation)); } }
 
-        private void LastPageCommandImplementation()
+        private void LastPageCommandImplementation(object input)
         {
             IEnumerable<CountryViewItem> response = countryService.GetCountries(LastPage, PagingConstants.DefaultItemsPerPage);
             Refresh(response, LastPage);
@@ -146,10 +146,17 @@ namespace LearnCode.Client.ViewModels
         private RelayCommand pageIndexCommand;
         public RelayCommand PageIndexCommand { get { return GetOrSetProperty(ref pageIndexCommand, () => this.CreateCommand(PageIndexCommandImplementation)); } }
 
-        private void PageIndexCommandImplementation()
+        private void PageIndexCommandImplementation(object input)
         {
-            IEnumerable<CountryViewItem> response = countryService.GetCountries(LastPage, PagingConstants.DefaultItemsPerPage);
-            Refresh(response, LastPage);
+            int page;
+            int.TryParse(input as string, out page);
+
+            if (page <= 0 || page > TotalPages)
+                return;
+
+            int nextItems = page * PagingConstants.DefaultItemsPerPage;
+            IEnumerable<CountryViewItem> response = countryService.GetCountries(nextItems, PagingConstants.DefaultItemsPerPage);
+            Refresh(response, nextItems);
         }
 
         #endregion
