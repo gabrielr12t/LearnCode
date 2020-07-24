@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FContextMenu\BasicContextMenu.cs" />
     <Compile Include="Converters\SearchTextToVisibilityConverter.cs" />
     <Compile Include="FDataGrid.cs" />
     <Compile Include="Paging\PagingConstants.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="ViewModels\CountryService.cs" />
     <Compile Include="ViewModels\CountryViewItem.cs" />
     <Compile Include="ViewModels\CountryViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces\IMarkable.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

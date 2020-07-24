@@ -47,6 +47,12 @@
                                             </Setter>
                                         </Style>
                                     </DataGrid.ItemContainerStyle>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Mark" Command="{TemplateBinding NextPageCommand}"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+
                                 </DataGrid>
 
                                 <Grid Grid.Row="2" Visibility="{TemplateBinding EnablePagination, Converter={StaticResource BooleanToVisibilityConverter}}">
