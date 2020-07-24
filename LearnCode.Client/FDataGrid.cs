@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LearnCode.Client.ContextMenuControl;
+using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +12,7 @@ namespace LearnCode.Client
     [TemplatePart(Name = nameof(FDataGrid.SelectedColumnTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.SelectedRowTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.MainFDataGrid), Type = typeof(DataGrid))]
+    [TemplatePart(Name = nameof(FDataGrid.FContextMenuTeste), Type = typeof(ContextMenu))]
     public class FDataGrid : DataGrid
     {
         protected TextBox ToPageTextBox { get; set; }
@@ -17,6 +20,7 @@ namespace LearnCode.Client
         protected TextBox SelectedColumnTextBox { get; set; }
         protected TextBox SelectedRowTextBox { get; set; }
         protected DataGrid MainFDataGrid { get; set; }
+        protected ContextMenu FContextMenuTeste { get; set; }
 
         #region Ctor
 
@@ -45,6 +49,7 @@ namespace LearnCode.Client
                 throw new InvalidOperationException("Control template not assigned.");
 
             RegisterEvents();
+            RegisterContextMenus();
         }
 
         private void RegisterEvents()
@@ -52,6 +57,12 @@ namespace LearnCode.Client
             ToPageTextBox.LostFocus += ToPageNotifyChanged;
             ToPageTextBox.KeyDown += ToPageNotifyChanged;
             MainFDataGrid.SelectedCellsChanged += MainFDataGridSelectedCellsChanged;
+        }
+
+        private void RegisterContextMenus()
+        {
+            IEnumerable items = this.MainFDataGrid.ItemsSource;
+            FBasicContextMenu = new FBasicContextMenu();
         }
 
         private void UnregisterEvents()
@@ -75,12 +86,14 @@ namespace LearnCode.Client
             SelectedColumnTextBox = Template.FindName(nameof(SelectedColumnTextBox), this) as TextBox;
             SelectedRowTextBox = Template.FindName(nameof(SelectedRowTextBox), this) as TextBox;
             MainFDataGrid = Template.FindName(nameof(MainFDataGrid), this) as DataGrid;
+            FContextMenuTeste = Template.FindName(nameof(FContextMenuTeste), this) as ContextMenu;
 
             if (ToPageTextBox == null ||
                 SelectedCellsTextBox == null ||
                 SelectedColumnTextBox == null ||
                 SelectedRowTextBox == null ||
-                MainFDataGrid == null)
+                MainFDataGrid == null ||
+                FContextMenuTeste == null)
                 throw new InvalidOperationException("Invalid Control template.");
 
             base.OnApplyTemplate();
@@ -95,13 +108,13 @@ namespace LearnCode.Client
         #endregion
 
         #region Pagination Command
-       
+
         public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty ToPageCommandProperty = DependencyProperty.Register(nameof(ToPageCommand), typeof(ICommand), typeof(FDataGrid));
-       
+
         public ICommand NextPageCommand
         {
             get { return (ICommand)GetValue(NextPageCommandProperty); }
@@ -183,6 +196,12 @@ namespace LearnCode.Client
             get { return (bool)GetValue(EnableFDataGridStatsProperty); }
             set { SetValue(EnableFDataGridStatsProperty, value); }
         }
+
+        #endregion
+
+        #region FBasicContextMenu
+
+        public FBasicContextMenu FBasicContextMenu { get; protected set; }
 
         #endregion
     }

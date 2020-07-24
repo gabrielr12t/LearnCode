@@ -4,7 +4,7 @@ using LearnCode.Client.ViewModels.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace LearnCode.Client.FContextMenu
+namespace LearnCode.Client.ContextMenuControl
 {
     public class BasicContextMenu<T> : ViewModelBase where T : IMarkable
     {

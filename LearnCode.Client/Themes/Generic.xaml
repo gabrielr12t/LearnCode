@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="clr-namespace:LearnCode.Client.Converters"
+                    xmlns:fdrv="clr-namespace:LearnCode.Client"
                     xmlns:local="clr-namespace:LearnCode.Client">
 
     <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -28,13 +29,16 @@
                                 </Grid.RowDefinitions>
 
                                 <DataGrid    
-                                    SelectionUnit="Cell"
                                     Name="MainFDataGrid"
                                     Grid.Row="1"
-                                    ItemsSource="{TemplateBinding ItemsSource}" CanUserAddRows="{TemplateBinding CanUserAddRows}"  
+                                    SelectionUnit="{TemplateBinding SelectionUnit}"
+                                    ItemsSource="{TemplateBinding ItemsSource}" 
+                                    CanUserAddRows="{TemplateBinding CanUserAddRows}"  
                                     CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
                                     AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
+                                    SelectedItem="{TemplateBinding SelectedItem}"
                                     Height="auto">
+
                                     <DataGrid.ItemContainerStyle>
                                         <Style TargetType="{x:Type DataGridRow}">
                                             <Setter Property="Visibility">
@@ -47,9 +51,30 @@
                                             </Setter>
                                         </Style>
                                     </DataGrid.ItemContainerStyle>
+
+                                    <!--<DataGrid.ContextMenu>
+                                        <fdrv:FContextMenu/>
+                                    </DataGrid.ContextMenu>-->
+
                                     <DataGrid.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Mark" Command="{TemplateBinding NextPageCommand}"/>
+                                        <ContextMenu Name="FContextMenuTeste">
+
+                                            <MenuItem Header="Mark"
+                                                      Command="{Binding FBasicContextMenu.MarkCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"/>
+                                            <MenuItem Header="Mark All"
+                                                      Command="{Binding FBasicContextMenu.MarkAllCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
+                                            <MenuItem Header="Unmark"
+                                                      Command="{Binding FBasicContextMenu.UnmarkCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"/>
+                                            <MenuItem Header="Unmark All"
+                                                      Command="{Binding FBasicContextMenu.UnmarkAllCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
+
+                                            <MenuItem Header="Invert Mark"
+                                                      Command="{Binding FBasicContextMenu.InvertMarkedACommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
 

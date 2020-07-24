@@ -17,6 +17,7 @@
             <fdrv:FDataGrid Grid.Row="0"
                             EnableFullTextSearch="False"
                             EnableFDataGridStats="True"
+                            SelectionUnit="Cell"
                             ItemsSource="{Binding CountriesViewItem}"
                             NextPageCommand="{Binding NextPageCommand}" 
                             PreviousPageCommand="{Binding PreviousPageCommand}"

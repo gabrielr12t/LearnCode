@@ -57,8 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FContextMenu\BasicContextMenu.cs" />
+    <Compile Include="ContextMenuControl\BasicContextMenu.cs" />
+    <Compile Include="ContextMenuControl\FBasicContextMenu.cs" />
     <Compile Include="Converters\SearchTextToVisibilityConverter.cs" />
+    <Compile Include="FContextMenu.cs" />
     <Compile Include="FDataGrid.cs" />
     <Compile Include="Paging\PagingConstants.cs" />
     <Compile Include="Util\Command\CommandBase.cs" />
