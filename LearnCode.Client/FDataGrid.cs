@@ -12,16 +12,8 @@ namespace LearnCode.Client
     [TemplatePart(Name = nameof(FDataGrid.SelectedColumnTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.SelectedRowTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.MainFDataGrid), Type = typeof(DataGrid))]
-    [TemplatePart(Name = nameof(FDataGrid.FContextMenuTeste), Type = typeof(ContextMenu))]
     public class FDataGrid : DataGrid
     {
-        protected TextBox ToPageTextBox { get; set; }
-        protected TextBox SelectedCellsTextBox { get; set; }
-        protected TextBox SelectedColumnTextBox { get; set; }
-        protected TextBox SelectedRowTextBox { get; set; }
-        protected DataGrid MainFDataGrid { get; set; }
-        protected ContextMenu FContextMenuTeste { get; set; }
-
         #region Ctor
 
         static FDataGrid()
@@ -38,6 +30,23 @@ namespace LearnCode.Client
         {
             UnregisterEvents();
         }
+
+        #endregion
+
+        #region ContextMenu
+
+        public BasicContextMenu BasicContextMenu { get; protected set; }
+        public ExporterContextMenu<object> ExporterContextMenu { get; protected set; }
+
+        #endregion
+
+        #region UIElements
+
+        protected TextBox ToPageTextBox { get; set; }
+        protected TextBox SelectedCellsTextBox { get; set; }
+        protected TextBox SelectedColumnTextBox { get; set; }
+        protected TextBox SelectedRowTextBox { get; set; }
+        protected DataGrid MainFDataGrid { get; set; }
 
         #endregion
 
@@ -62,7 +71,9 @@ namespace LearnCode.Client
         private void RegisterContextMenus()
         {
             IEnumerable items = this.MainFDataGrid.ItemsSource;
-            FBasicContextMenu = new FBasicContextMenu();
+
+            ExporterContextMenu = new ExporterContextMenu<object>();
+            BasicContextMenu = new BasicContextMenu();
         }
 
         private void UnregisterEvents()
@@ -86,14 +97,12 @@ namespace LearnCode.Client
             SelectedColumnTextBox = Template.FindName(nameof(SelectedColumnTextBox), this) as TextBox;
             SelectedRowTextBox = Template.FindName(nameof(SelectedRowTextBox), this) as TextBox;
             MainFDataGrid = Template.FindName(nameof(MainFDataGrid), this) as DataGrid;
-            FContextMenuTeste = Template.FindName(nameof(FContextMenuTeste), this) as ContextMenu;
 
             if (ToPageTextBox == null ||
                 SelectedCellsTextBox == null ||
                 SelectedColumnTextBox == null ||
                 SelectedRowTextBox == null ||
-                MainFDataGrid == null ||
-                FContextMenuTeste == null)
+                MainFDataGrid == null)
                 throw new InvalidOperationException("Invalid Control template.");
 
             base.OnApplyTemplate();
@@ -173,11 +182,13 @@ namespace LearnCode.Client
 
         #endregion
 
-        #region Enable Properties
+        #region Enable Elements
 
         public static readonly DependencyProperty EnableFullTextSearchProperty = DependencyProperty.Register(nameof(EnableFullTextSearch), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(false));
         public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
         public static readonly DependencyProperty EnableFDataGridStatsProperty = DependencyProperty.Register(nameof(EnableFDataGridStats), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty EnableBasicContextMenuProperty = DependencyProperty.Register(nameof(EnableBasicContextMenu), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty EnableExporterContextMenutMenuProperty = DependencyProperty.Register(nameof(EnableExporterContextMenu), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
 
         public bool EnableFullTextSearch
         {
@@ -197,11 +208,17 @@ namespace LearnCode.Client
             set { SetValue(EnableFDataGridStatsProperty, value); }
         }
 
-        #endregion
+        public bool EnableBasicContextMenu
+        {
+            get { return (bool)GetValue(EnableBasicContextMenuProperty); }
+            set { SetValue(EnableBasicContextMenuProperty, value); }
+        }
 
-        #region FBasicContextMenu
-
-        public FBasicContextMenu FBasicContextMenu { get; protected set; }
+        public bool EnableExporterContextMenu
+        {
+            get { return (bool)GetValue(EnableExporterContextMenutMenuProperty); }
+            set { SetValue(EnableExporterContextMenutMenuProperty, value); }
+        }
 
         #endregion
     }

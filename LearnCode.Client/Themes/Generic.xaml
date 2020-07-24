@@ -29,15 +29,15 @@
                                 </Grid.RowDefinitions>
 
                                 <DataGrid    
-                                    Name="MainFDataGrid"
                                     Grid.Row="1"
+                                    Name="MainFDataGrid"
                                     SelectionUnit="{TemplateBinding SelectionUnit}"
                                     ItemsSource="{TemplateBinding ItemsSource}" 
                                     CanUserAddRows="{TemplateBinding CanUserAddRows}"  
                                     CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
                                     AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
                                     SelectedItem="{TemplateBinding SelectedItem}"
-                                    Height="auto">
+                                    Height="{TemplateBinding Height}">
 
                                     <DataGrid.ItemContainerStyle>
                                         <Style TargetType="{x:Type DataGridRow}">
@@ -57,25 +57,47 @@
                                     </DataGrid.ContextMenu>-->
 
                                     <DataGrid.ContextMenu>
-                                        <ContextMenu Name="FContextMenuTeste">
 
-                                            <MenuItem Header="Mark"
-                                                      Command="{Binding FBasicContextMenu.MarkCommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"/>
-                                            <MenuItem Header="Mark All"
-                                                      Command="{Binding FBasicContextMenu.MarkAllCommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
-                                            <MenuItem Header="Unmark"
-                                                      Command="{Binding FBasicContextMenu.UnmarkCommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"/>
-                                            <MenuItem Header="Unmark All"
-                                                      Command="{Binding FBasicContextMenu.UnmarkAllCommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
+                                        <ContextMenu>
 
-                                            <MenuItem Header="Invert Mark"
-                                                      Command="{Binding FBasicContextMenu.InvertMarkedACommand}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"/>
+                                            <!--Basic ContextMenu-->
+                                            <MenuItem Header="Mark" Grid.Row="0"
+                                                      Command="{Binding BasicContextMenu.MarkCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <MenuItem Header="Mark All" Grid.Row="1"
+                                                      Command="{Binding BasicContextMenu.MarkAllCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <MenuItem Header="Unmark" Grid.Row="2"
+                                                      Command="{Binding BasicContextMenu.UnmarkCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.CurrentItem}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <MenuItem Header="Unmark All" Grid.Row="3"
+                                                      Command="{Binding BasicContextMenu.UnmarkAllCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <MenuItem Header="Invert Mark" Grid.Row="4"
+                                                      Command="{Binding BasicContextMenu.InvertMarkedACommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                            <!--=============================================-->
+
+                                            <Separator/>
+
+                                            <MenuItem Header="Exporter" Grid.Row="0"
+                                                      Command="{Binding ExporterContextMenu.ExportCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                      AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.ItemsSource}"
+                                                      Visibility="{TemplateBinding EnableBasicContextMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                                         </ContextMenu>
+
                                     </DataGrid.ContextMenu>
 
                                 </DataGrid>
