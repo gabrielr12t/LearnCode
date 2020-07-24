@@ -22,12 +22,13 @@
 
 
             <fdrv:FDataGrid Grid.Row="0"
+                            EnableFullTextSearch="True"
                                   ItemsSource="{Binding CountriesViewItem}"
                                   NextPageCommand="{Binding NextPageCommand}" 
                                   PreviousPageCommand="{Binding PreviousPageCommand}"
                                   FirstPageCommand="{Binding FirstPageCommand}"
                                   LastPageCommand="{Binding LastPageCommand}"
-                                  ToPageCommand="{Binding PageIndexCommand}"
+                                  ToPageCommand="{Binding ToPageCommand}"
                                   TotalItems="{Binding TotalItems}"
                                   TotalPages="{Binding TotalPages}"
                                   CurrentPage="{Binding CurrentPage, Mode=TwoWay}">

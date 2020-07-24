@@ -1,25 +1,33 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace LearnCode.Client
 {
-    [TemplatePart(Name = "PART_PageTextBox", Type = typeof(TextBox))]
+    [TemplatePart(Name = nameof(FDataGrid.ToPageTextBox), Type = typeof(TextBox))]
+    [TemplatePart(Name = nameof(FDataGrid.SelectedCells), Type = typeof(TextBox))]
+    [TemplatePart(Name = nameof(FDataGrid.SelectedColumnTextBox), Type = typeof(TextBox))]
+    [TemplatePart(Name = nameof(FDataGrid.SelectedRowTextBox), Type = typeof(TextBox))]
+    [TemplatePart(Name = nameof(FDataGrid.MainFDataGrid), Type = typeof(DataGrid))]
     public class FDataGrid : DataGrid
     {
-        protected TextBox PageIndexTextBox { get; set; }
+        protected TextBox ToPageTextBox { get; set; }
+        protected TextBox SelectedCellsTextBox { get; set; }
+        protected TextBox SelectedColumnTextBox { get; set; }
+        protected TextBox SelectedRowTextBox { get; set; }
+        protected DataGrid MainFDataGrid { get; set; }
 
         #region Ctor
 
         static FDataGrid()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(FDataGrid),
-                new FrameworkPropertyMetadata(typeof(FDataGrid)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FDataGrid), new FrameworkPropertyMetadata(typeof(FDataGrid)));
         }
 
         public FDataGrid()
         {
-            this.Loaded += FderivsDataGridLoaded;
+            this.Loaded += FDataGridLoaded;
         }
 
         ~FDataGrid()
@@ -31,30 +39,54 @@ namespace LearnCode.Client
 
         #region Internal Methods
 
-        private void FderivsDataGridLoaded(object sender, RoutedEventArgs e)
+        private void FDataGridLoaded(object sender, RoutedEventArgs e)
         {
-            RegisterEvents();
-        }
+            if (Template == null)
+                throw new InvalidOperationException("Control template not assigned.");
 
-        public override void OnApplyTemplate()
-        {
-            PageIndexTextBox = this.Template.FindName("PART_PageTextBox", this) as TextBox;
-            base.OnApplyTemplate();
+            RegisterEvents();
         }
 
         private void RegisterEvents()
         {
-            PageIndexTextBox.LostFocus += PageIndexNotify;
-            PageIndexTextBox.KeyDown += PageIndexNotify;
+            ToPageTextBox.LostFocus += ToPageNotifyChanged;
+            ToPageTextBox.KeyDown += ToPageNotifyChanged;
+            MainFDataGrid.SelectedCellsChanged += MainFDataGridSelectedCellsChanged;
         }
 
         private void UnregisterEvents()
         {
-            PageIndexTextBox.LostFocus -= PageIndexNotify;
-            PageIndexTextBox.KeyDown -= PageIndexNotify;
+            ToPageTextBox.LostFocus -= ToPageNotifyChanged;
+            ToPageTextBox.KeyDown -= ToPageNotifyChanged;
+            MainFDataGrid.SelectedCellsChanged -= MainFDataGridSelectedCellsChanged;
         }
 
-        private void PageIndexNotify(object sender, RoutedEventArgs e)
+        private void MainFDataGridSelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            SelectedCellsTextBox.Text = MainFDataGrid.SelectedCells?.Count.ToString();
+            SelectedColumnTextBox.Text = (MainFDataGrid.CurrentColumn?.DisplayIndex + 1)?.ToString();
+            SelectedRowTextBox.Text = (MainFDataGrid.Items.IndexOf(MainFDataGrid.CurrentItem) + 1).ToString();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            ToPageTextBox = Template.FindName(nameof(ToPageTextBox), this) as TextBox;
+            SelectedCellsTextBox = Template.FindName(nameof(SelectedCellsTextBox), this) as TextBox;
+            SelectedColumnTextBox = Template.FindName(nameof(SelectedColumnTextBox), this) as TextBox;
+            SelectedRowTextBox = Template.FindName(nameof(SelectedRowTextBox), this) as TextBox;
+            MainFDataGrid = Template.FindName(nameof(MainFDataGrid), this) as DataGrid;
+
+            if (ToPageTextBox == null ||
+                SelectedCellsTextBox == null ||
+                SelectedColumnTextBox == null ||
+                SelectedRowTextBox == null ||
+                MainFDataGrid == null)
+                throw new InvalidOperationException("Invalid Control template.");
+
+            base.OnApplyTemplate();
+        }
+
+        private void ToPageNotifyChanged(object sender, RoutedEventArgs e)
         {
             TextBox textbox = (TextBox)sender;
             ToPageCommand?.Execute(textbox.Text);
@@ -63,20 +95,13 @@ namespace LearnCode.Client
         #endregion
 
         #region Pagination Command
-
-        public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+       
         public static readonly DependencyProperty NextPageCommandProperty = DependencyProperty.Register(nameof(NextPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty PreviousPageCommandProperty = DependencyProperty.Register(nameof(PreviousPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty FirstPageCommandProperty = DependencyProperty.Register(nameof(FirstPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty LastPageCommandProperty = DependencyProperty.Register(nameof(LastPageCommand), typeof(ICommand), typeof(FDataGrid));
         public static readonly DependencyProperty ToPageCommandProperty = DependencyProperty.Register(nameof(ToPageCommand), typeof(ICommand), typeof(FDataGrid));
-
-        public bool EnablePagination
-        {
-            get { return (bool)GetValue(EnablePaginationProperty); }
-            set { SetValue(EnablePaginationProperty, value); }
-        }
-
+       
         public ICommand NextPageCommand
         {
             get { return (ICommand)GetValue(NextPageCommandProperty); }
@@ -109,7 +134,7 @@ namespace LearnCode.Client
 
         #endregion
 
-        #region Pagination Information
+        #region Page Information
 
         public static readonly DependencyProperty TotalItemsProperty = DependencyProperty.Register(nameof(TotalItems), typeof(int), typeof(FDataGrid));
         public static readonly DependencyProperty TotalPagesProperty = DependencyProperty.Register(nameof(TotalPages), typeof(int), typeof(FDataGrid));
@@ -131,6 +156,25 @@ namespace LearnCode.Client
         {
             get { return (int)GetValue(CurrentPageProperty); }
             set { SetValue(CurrentPageProperty, value); }
+        }
+
+        #endregion
+
+        #region Enable Properties
+
+        public static readonly DependencyProperty EnableFullTextSearchProperty = DependencyProperty.Register(nameof(EnableFullTextSearch), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(false));
+        public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+
+        public bool EnableFullTextSearch
+        {
+            get { return (bool)GetValue(EnableFullTextSearchProperty); }
+            set { SetValue(EnableFullTextSearchProperty, value); }
+        }
+
+        public bool EnablePagination
+        {
+            get { return (bool)GetValue(EnablePaginationProperty); }
+            set { SetValue(EnablePaginationProperty, value); }
         }
 
         #endregion

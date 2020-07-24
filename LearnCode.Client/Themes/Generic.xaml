@@ -4,6 +4,7 @@
                     xmlns:local="clr-namespace:LearnCode.Client">
 
     <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <conv:SearchTextToVisibilityConverter x:Key="SearchTextToVisibilityConverter"/>
 
     <Style TargetType="{x:Type local:FDataGrid}">
         <Setter Property="Template">
@@ -15,6 +16,9 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel Orientation="Vertical" DataContext="{TemplateBinding DataContext}">
 
+                            <!--FilterText-->
+                            <TextBox Width="200" x:Name="txtFullTextSearch" Margin="2" HorizontalAlignment="Left" Visibility="{TemplateBinding EnableFullTextSearch, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
                             <Grid DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:FDataGrid}}}">
 
                                 <Grid.RowDefinitions>
@@ -24,11 +28,25 @@
                                 </Grid.RowDefinitions>
 
                                 <DataGrid    
-                                      Grid.Row="1"
-                                      ItemsSource="{TemplateBinding ItemsSource}" CanUserAddRows="{TemplateBinding CanUserAddRows}"  
-                                      CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
-                                      AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
-                                      Height="auto">
+                                    SelectionUnit="Cell"
+                                    Name="MainFDataGrid"
+                                    Grid.Row="1"
+                                    ItemsSource="{TemplateBinding ItemsSource}" CanUserAddRows="{TemplateBinding CanUserAddRows}"  
+                                    CanUserDeleteRows="{TemplateBinding CanUserDeleteRows}"   
+                                    AutoGenerateColumns="{TemplateBinding AutoGenerateColumns}"
+                                    Height="auto">
+                                    <DataGrid.ItemContainerStyle>
+                                        <Style TargetType="{x:Type DataGridRow}">
+                                            <Setter Property="Visibility">
+                                                <Setter.Value>
+                                                    <MultiBinding Converter="{StaticResource SearchTextToVisibilityConverter}">
+                                                        <Binding ElementName="txtFullTextSearch" Path="Text"/>
+                                                        <Binding BindsDirectlyToSource="True"/>
+                                                    </MultiBinding>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGrid.ItemContainerStyle>
                                 </DataGrid>
 
                                 <Grid Grid.Row="2" Visibility="{TemplateBinding EnablePagination, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -37,7 +55,7 @@
                                         <RowDefinition Height="24"/>
                                         <RowDefinition Height="24"/>
                                     </Grid.RowDefinitions>
-                                    
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -51,7 +69,7 @@
                                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                                         <Button Content="&lt;&lt;" Grid.Column="0" Command="{TemplateBinding FirstPageCommand}" />
                                         <Button Content="&lt;" Grid.Column="1"     Command="{TemplateBinding PreviousPageCommand}" />
-                                        <TextBox Name="PART_PageTextBox" Text="{Binding CurrentPage}" Grid.Column="2"/>
+                                        <TextBox Name="ToPageTextBox" Text="{Binding CurrentPage}" Grid.Column="2"/>
                                         <Button Content="&gt;" Grid.Column="3"     Command="{TemplateBinding NextPageCommand}"/>
                                         <Button Content="&gt;&gt;" Grid.Column="4" Command="{TemplateBinding LastPageCommand}"/>
 
@@ -60,6 +78,12 @@
 
                                         <TextBlock Text="Total Pages:"/>
                                         <TextBlock Text="{Binding TotalPages}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                        <TextBox Name="SelectedCellsTextBox" Text="{Binding CurrentPage}" />
+                                        <TextBox Name="SelectedColumnTextBox" />
+                                        <TextBox Name="SelectedRowTextBox" />
                                     </StackPanel>
 
                                 </Grid>
