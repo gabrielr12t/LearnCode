@@ -164,6 +164,7 @@ namespace LearnCode.Client
 
         public static readonly DependencyProperty EnableFullTextSearchProperty = DependencyProperty.Register(nameof(EnableFullTextSearch), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(false));
         public static readonly DependencyProperty EnablePaginationProperty = DependencyProperty.Register(nameof(EnablePagination), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
+        public static readonly DependencyProperty EnableFDataGridStatsProperty = DependencyProperty.Register(nameof(EnableFDataGridStats), typeof(bool), typeof(FDataGrid), new UIPropertyMetadata(true));
 
         public bool EnableFullTextSearch
         {
@@ -175,6 +176,12 @@ namespace LearnCode.Client
         {
             get { return (bool)GetValue(EnablePaginationProperty); }
             set { SetValue(EnablePaginationProperty, value); }
+        }
+
+        public bool EnableFDataGridStats
+        {
+            get { return (bool)GetValue(EnableFDataGridStatsProperty); }
+            set { SetValue(EnableFDataGridStatsProperty, value); }
         }
 
         #endregion

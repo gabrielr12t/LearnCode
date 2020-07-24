@@ -12,17 +12,11 @@
         Title="MainWindow" Height="450" Width="800">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="24"/>
-            <RowDefinition Height="24"/>
-        </Grid.RowDefinitions>
-
-        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Visible">
-
+        <ScrollViewer HorizontalScrollBarVisibility="Visible">
 
             <fdrv:FDataGrid Grid.Row="0"
-                            EnableFullTextSearch="True"
+                            EnableFullTextSearch="False"
+                            EnableFDataGridStats="True"
                             ItemsSource="{Binding CountriesViewItem}"
                             NextPageCommand="{Binding NextPageCommand}" 
                             PreviousPageCommand="{Binding PreviousPageCommand}"
@@ -32,10 +26,6 @@
                             TotalItems="{Binding TotalItems}"
                             TotalPages="{Binding TotalPages}"
                             CurrentPage="{Binding CurrentPage, Mode=TwoWay}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Code" Binding="{Binding Code}"/>
-                </DataGrid.Columns>
             </fdrv:FDataGrid>
 
         </ScrollViewer>

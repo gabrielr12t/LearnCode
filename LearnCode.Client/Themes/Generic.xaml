@@ -86,7 +86,7 @@
                                         <TextBlock Text="{Binding TotalPages}"/>
                                     </StackPanel>
 
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Visibility="{TemplateBinding EnableFDataGridStats, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <TextBox Name="SelectedCellsTextBox" Text="{Binding CurrentPage}" />
                                         <TextBox Name="SelectedColumnTextBox" />
                                         <TextBox Name="SelectedRowTextBox" />
