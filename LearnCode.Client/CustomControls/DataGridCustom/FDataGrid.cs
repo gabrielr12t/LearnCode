@@ -1,19 +1,27 @@
 ﻿using LearnCode.Client.ContextMenuControl;
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace LearnCode.Client
+namespace LearnCode.Client.CustomControls.DataGridCustom
 {
     [TemplatePart(Name = nameof(FDataGrid.ToPageTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.SelectedCells), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.SelectedColumnTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.SelectedRowTextBox), Type = typeof(TextBox))]
     [TemplatePart(Name = nameof(FDataGrid.MainFDataGrid), Type = typeof(DataGrid))]
-    public class FDataGrid : DataGrid
+    public partial class FDataGrid : DataGrid
     {
+        #region Region Test
+
+
+        #endregion
+
         #region Ctor
 
         static FDataGrid()
@@ -23,7 +31,13 @@ namespace LearnCode.Client
 
         public FDataGrid()
         {
+            Initialize();
             this.Loaded += FDataGridLoaded;
+        }
+
+        private void Initialize()
+        {
+            ContextMenuCommand = new List<ContextMenuCommand>();
         }
 
         ~FDataGrid()
@@ -35,8 +49,7 @@ namespace LearnCode.Client
 
         #region ContextMenu
 
-        public BasicContextMenu BasicContextMenu { get; protected set; }
-        public ExporterContextMenu<object> ExporterContextMenu { get; protected set; }
+        public List<ContextMenuCommand> ContextMenuCommand { get; protected set; }
 
         #endregion
 
@@ -70,10 +83,34 @@ namespace LearnCode.Client
 
         private void RegisterContextMenus()
         {
-            IEnumerable items = this.MainFDataGrid.ItemsSource;
+            IEnumerable<object> items = ItemsSource.OfType<object>();
 
-            ExporterContextMenu = new ExporterContextMenu<object>();
-            BasicContextMenu = new BasicContextMenu();
+            if (EnableBasicContextMenu)
+            {
+                ContextMenuCommand.AddRange(GetContext(new BasicContextMenu<object>(items)));
+            }
+
+            if (EnableExporterContextMenu)
+            {
+                ContextMenuCommand.AddRange(GetContext(new ExporterContextMenu<object>()));
+            }
+        }
+
+        private IEnumerable<ContextMenuCommand> GetContext(object obj)
+        {
+            Dictionary<string, string> _dict = new Dictionary<string, string>();
+
+            IEnumerable<PropertyInfo> props = obj.GetType().GetProperties().Where(p => typeof(ICommand).IsAssignableFrom(p.PropertyType));
+
+            foreach (PropertyInfo prop in props)
+            {
+                DisplayNameAttribute attribute = prop.GetCustomAttributes(true)?.FirstOrDefault() as DisplayNameAttribute;
+
+                string header = attribute?.DisplayName ?? prop.Name;
+                ICommand command = prop.GetValue(obj, null) as ICommand;
+
+                yield return new ContextMenuCommand(header, command);
+            }
         }
 
         private void UnregisterEvents()

@@ -2,8 +2,17 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:LearnCode.Client"
+             xmlns:contextmenu="clr-namespace:LearnCode.Client.ContextMenuControl"
+             xmlns:datagrid="clr-namespace:LearnCode.Client.CustomControls.DataGridCustom"
              StartupUri="MainWindow.xaml">
+    
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CustomControls/ContextMenuCustom/FContextMenuStyle.xaml"/>
+                <ResourceDictionary Source="/CustomControls/DataGridCustom/FDataGridStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
+    
 </Application>

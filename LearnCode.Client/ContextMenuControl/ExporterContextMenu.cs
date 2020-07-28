@@ -2,6 +2,7 @@
 using LearnCode.Client.Util;
 using LearnCode.Client.Util.Command;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace LearnCode.Client.ContextMenuControl
 {
@@ -15,6 +16,7 @@ namespace LearnCode.Client.ContextMenuControl
         }
 
         private RelayCommand exportCommand;
+        [DisplayName("Export to Excel")]
         public RelayCommand ExportCommand { get { return GetOrSetProperty(ref exportCommand, () => this.CreateCommand(ExportCommandImplementation)); } }
         private void ExportCommandImplementation(object input)
         {

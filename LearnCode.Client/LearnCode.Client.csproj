@@ -59,9 +59,12 @@
     </ApplicationDefinition>
     <Compile Include="ContextMenuControl\ExporterContextMenu.cs" />
     <Compile Include="ContextMenuControl\BasicContextMenu.cs" />
+    <Compile Include="ContextMenuControl\ContextMenuCommand.cs" />
+    <Compile Include="ContextMenuControl\IContextMenu.cs" />
     <Compile Include="Converters\SearchTextToVisibilityConverter.cs" />
+    <Compile Include="CustomControls\ContextMenuCustom\FContextMenu.cs" />
+    <Compile Include="CustomControls\DataGridCustom\FDataGrid.cs" />
     <Compile Include="Data\ExporterData.cs" />
-    <Compile Include="FDataGrid.cs" />
     <Compile Include="Paging\PagingConstants.cs" />
     <Compile Include="Util\Command\CommandBase.cs" />
     <Compile Include="Util\Command\CommandExecuteFactory.cs" />
@@ -73,6 +76,14 @@
     <Compile Include="ViewModels\CountryViewItem.cs" />
     <Compile Include="ViewModels\CountryViewModel.cs" />
     <Compile Include="ViewModels\Interfaces\IMarkable.cs" />
+    <Page Include="CustomControls\ContextMenuCustom\FContextMenuStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\DataGridCustom\FDataGridStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

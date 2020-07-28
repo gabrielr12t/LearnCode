@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearnCode.Client"
         xmlns:viewmodel="clr-namespace:LearnCode.Client.ViewModels"
-        xmlns:fdrv="clr-namespace:LearnCode.Client"
+        xmlns:fdrv="clr-namespace:LearnCode.Client.CustomControls.DataGridCustom"
         xmlns:conv="clr-namespace:LearnCode.Client.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewmodel:CountryViewModel}"
